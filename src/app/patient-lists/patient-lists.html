@@ -1,0 +1,29 @@
+<div class="page-shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">+</div><div class="brand-name"><b>genie</b><span>MD</span></div></div>
+    <div class="topnav active">Patients</div><div class="topbar-spacer"></div>
+    <div class="patient-mini"><div class="mini-avatar">MD</div><div><div class="mini-name">Marcus D. Whitfield</div><div class="mini-meta">DOB Mar 14, 1962 · 64 y · Male</div></div></div>
+    <div class="doctor"><div class="doctor-avatar">AR</div><div><div class="doctor-name">Dr. A. Reyes</div><div class="doctor-meta">Internal Medicine</div></div></div>
+  </header>
+  <main class="page-content">
+    <div class="title-row"><h1>Patients ({{ totalPatients }})</h1><div class="legend"><span><i class="legend-box green">✓</i> Onboarded</span><span><i class="legend-box blue">✓</i> Waiting for onboarding</span><span><i class="legend-box orange">✓</i> Enrolled</span><span><i class="legend-box pink">✓</i> Discharged</span></div></div>
+    <div class="tabs"><button [class.active]="activeTab === 'Enrolled Patients'" (click)="activeTab = 'Enrolled Patients'">Enrolled Patients</button><button [class.active]="activeTab === 'Activity'" (click)="activeTab = 'Activity'">Activity</button><button [class.active]="activeTab === 'Waiting For Enrollment'" (click)="activeTab = 'Waiting For Enrollment'">Waiting For Enrollment</button></div>
+    <div class="toolbar"><input class="search-box" type="search" placeholder="Search by name or MRN" aria-label="Search patients" [(ngModel)]="searchTerm"/><button class="outline-btn blue-btn" (click)="createPatient()">Create new patient</button><button class="outline-btn orange-btn" (click)="addExistingPatient()">Add existing patient to clinic</button><button class="outline-btn green-btn" (click)="exportPatients()">Export</button><span class="shown-count">{{ filteredPatients.length }} of {{ allPatients.length }} shown</span></div>
+    <section class="table-card"><div class="table-scroll"><table class="patient-table">
+      <thead><tr><th>Patient</th><th>Programs</th><th>Contact status</th><th>Care navigator</th><th>MTD minutes</th><th>This month</th><th>Drug info</th><th>Consent</th></tr></thead>
+      <tbody>@for (row of filteredPatients; track row.id) {
+        <tr tabindex="0" (click)="openPatient(row)" (keydown.enter)="openPatient(row)">
+          <td><div class="name-cell"><strong>{{ row.name }}</strong><small>{{ row.mrn }} · {{ row.dob }}</small></div></td>
+          <td><div class="program-flags"><span [class.checked]="row.rpm">RPM</span><span [class.checked]="row.rtmr">RTMR</span><span [class.checked]="row.rtmms">RTMMS</span><span [class.checked]="row.ccm">CCM</span></div></td>
+          <td><span class="status-badge" [class.status-green]="row.contactTone === 'green'" [class.status-orange]="row.contactTone === 'orange'" [class.status-blue]="row.contactTone === 'blue'" [class.status-gray]="row.contactTone === 'gray'">{{ row.contactStatus }}</span><small class="subline">{{ row.contactDetail }}</small></td>
+          <td><div class="navigator-cell"><strong>{{ row.navigator }}</strong><small>{{ row.navigatorDetail }}</small></div></td>
+          <td><div class="minutes-cell"><strong>{{ row.mtdMinutes }} min</strong><small [class.short]="row.minutesTone === 'short'">{{ row.minutesNote }}</small></div></td>
+          <td><span class="status-badge" [class.attention]="row.monthStatus === 'Needs attention'" [class.complete]="row.monthStatus === 'Complete'">{{ row.monthStatus }}</span></td>
+          <td><span class="drug-icon" [class.warn]="row.drugInfo === 'attention'">!</span></td>
+          <td><span class="consent" [class.add]="row.consent === 'Add consent'">{{ row.consent }}</span></td>
+        </tr>
+      } @empty { <tr><td class="empty-state" colspan="8">No patients match your search.</td></tr> }</tbody>
+    </table></div></section>
+    <p class="hint">Select a patient row to open the patient detail view.</p>
+  </main>
+</div>

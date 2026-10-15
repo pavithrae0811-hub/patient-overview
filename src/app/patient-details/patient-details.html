@@ -1,0 +1,87 @@
+<div class="detail-shell">
+  <header class="detail-header">
+    <div class="brand">
+      <div class="brand-mark"><span>+</span></div>
+      <div class="brand-name"><b>genie</b><span>MD</span></div>
+    </div>
+    <a routerLink="/patients" class="back-link">← Patients</a>
+    <div class="spacer"></div>
+    <div class="doctor">
+      <div class="doctor-avatar">AR</div>
+      <div>
+        <div class="doctor-name">Dr. A. Reyes</div>
+        <div class="doctor-meta">Internal Medicine</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="detail-content" *ngIf="patient as p; else notFound">
+    <div class="detail-title">
+      <div>
+        <div class="eyebrow">PATIENT DETAIL REPORT</div>
+        <h1>{{ p.name }}</h1>
+        <p>{{ p.mrn }} · DOB {{ p.dob }}</p>
+      </div>
+      <button class="primary-btn" (click)="backToPatients()">Back to patient list</button>
+    </div>
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <span>CONTACT STATUS</span>
+        <strong>{{ p.contactStatus }}</strong>
+        <small>{{ p.contactDetail }}</small>
+      </article>
+      <article class="summary-card">
+        <span>CARE NAVIGATOR</span>
+        <strong>{{ p.navigator }}</strong>
+        <small>{{ p.navigatorDetail }}</small>
+      </article>
+      <article class="summary-card">
+        <span>MTD MINUTES</span>
+        <strong>{{ p.mtdMinutes }} min</strong>
+        <small>{{ p.minutesNote }}</small>
+      </article>
+      <article class="summary-card">
+        <span>THIS MONTH</span>
+        <strong>{{ p.monthStatus }}</strong>
+        <small>Care plan monitoring</small>
+      </article>
+    </section>
+
+    <div class="report-grid">
+      <section class="report-card">
+        <h2>Patient information</h2>
+        <div class="info-row"><span>Patient name</span><b>{{ p.name }}</b></div>
+        <div class="info-row"><span>Medical record number</span><b>{{ p.mrn }}</b></div>
+        <div class="info-row"><span>Date of birth</span><b>{{ p.dob }}</b></div>
+        <div class="info-row"><span>Phone</span><b>{{ p.phone }}</b></div>
+        <div class="info-row"><span>Email</span><b>{{ p.email }}</b></div>
+        <div class="info-row"><span>Diagnosis</span><b>{{ p.diagnosis }}</b></div>
+        <div class="info-row"><span>Allergies</span><b>{{ p.allergies }}</b></div>
+      </section>
+
+      <section class="report-card">
+        <h2>Program enrollment</h2>
+        <div class="program"><span>RPM</span><b [class.on]="p.rpm">{{ p.rpm ? 'Enrolled' : 'Not enrolled' }}</b></div>
+        <div class="program"><span>RTMR</span><b [class.on]="p.rtmr">{{ p.rtmr ? 'Enrolled' : 'Not enrolled' }}</b></div>
+        <div class="program"><span>RTMMS</span><b [class.on]="p.rtmms">{{ p.rtmms ? 'Enrolled' : 'Not enrolled' }}</b></div>
+        <div class="program"><span>CCM</span><b [class.on]="p.ccm">{{ p.ccm ? 'Enrolled' : 'Not enrolled' }}</b></div>
+
+        <h2 class="med-heading">Current medications</h2>
+        <ul>
+          <li *ngFor="let medication of p.medications">{{ medication }}</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <ng-template #notFound>
+    <main class="detail-content">
+      <section class="report-card not-found">
+        <h1>Patient not found</h1>
+        <p>The selected patient does not exist in the hardcoded patient data.</p>
+        <button class="primary-btn" (click)="backToPatients()">Return to patients</button>
+      </section>
+    </main>
+  </ng-template>
+</div>
