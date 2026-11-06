@@ -1,4 +1,4 @@
-import { Patient } from '../models/patient.models';
+import { Patient } from '../../models/patient.models';
 
 export const PATIENTS: Patient[] = [
   {

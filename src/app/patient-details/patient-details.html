@@ -83,5 +83,51 @@
         <button class="primary-btn" (click)="backToPatients()">Return to patients</button>
       </section>
     </main>
-  </ng-template>
+  </ng-template> 
 </div>
+<!-- Vital Signs Section -->
+<section class="vitals-section">
+
+  <div class="section-header">
+    <div>
+      <h2>Vital Signs</h2>
+      <p>Patient health measurements overview</p>
+    </div>
+
+    <span class="updated-label">
+      Last updated: Today
+    </span>
+  </div>
+
+  <div class="vitals-grid">
+
+    @for (vital of vitalSigns; track vital.name) {
+      <div class="vital-card">
+
+        <div class="vital-top">
+          <span class="vital-icon">
+            {{ vital.icon }}
+          </span>
+
+          <span class="status-normal">
+            {{ vital.status }}
+          </span>
+        </div>
+
+        <h3>{{ vital.name }}</h3>
+
+        <div class="vital-value">
+          {{ vital.value }}
+          <small>{{ vital.unit }}</small>
+        </div>
+
+      </div>
+    }
+
+    @empty {
+      <p>No vital signs available.</p>
+    }
+
+  </div>
+</section>
+

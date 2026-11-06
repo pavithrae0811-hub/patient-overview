@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PATIENTS } from '../data/patient.data';
+import { PATIENTS } from './data/patient.data';
 import { Patient } from '../models/patient.models';
 
 @Injectable({
@@ -13,6 +13,6 @@ export class PatientService {
   }
 
   getPatient(id: number): Patient | undefined {
-    return PATIENTS.find(patient => patient.id === id);
+    return PATIENTS.find((patient: Patient) => patient.id === id);
   }
 }
