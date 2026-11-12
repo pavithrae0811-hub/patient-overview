@@ -1,133 +1,440 @@
-<div class="detail-shell">
-  <header class="detail-header">
-    <div class="brand">
-      <div class="brand-mark"><span>+</span></div>
-      <div class="brand-name"><b>genie</b><span>MD</span></div>
-    </div>
-    <a routerLink="/patients" class="back-link">← Patients</a>
-    <div class="spacer"></div>
-    <div class="doctor">
-      <div class="doctor-avatar">AR</div>
-      <div>
-        <div class="doctor-name">Dr. A. Reyes</div>
-        <div class="doctor-meta">Internal Medicine</div>
+
+@if (patient; as p) {
+  <div class="dashboard">
+
+    <!-- Header -->
+    <header class="top-header">
+      <div class="brand">
+        <div class="brand-icon">G</div>
+        <div>
+          <h2>GenieMD</h2>
+          <span>Patient Management</span>
+        </div>
       </div>
-    </div>
-  </header>
 
-  <main class="detail-content" *ngIf="patient as p; else notFound">
-    <div class="detail-title">
-      <div>
-        <div class="eyebrow">PATIENT DETAIL REPORT</div>
-        <h1>{{ p.name }}</h1>
-        <p>{{ p.mrn }} · DOB {{ p.dob }}</p>
+      <div class="header-right">
+        <span>Clinical Dashboard</span>
+        <div class="user-avatar">DR</div>
       </div>
-      <button class="primary-btn" (click)="backToPatients()">Back to patient list</button>
-    </div>
+    </header>
 
-    <section class="summary-grid">
-      <article class="summary-card">
-        <span>CONTACT STATUS</span>
-        <strong>{{ p.contactStatus }}</strong>
-        <small>{{ p.contactDetail }}</small>
-      </article>
-      <article class="summary-card">
-        <span>CARE NAVIGATOR</span>
-        <strong>{{ p.navigator }}</strong>
-        <small>{{ p.navigatorDetail }}</small>
-      </article>
-      <article class="summary-card">
-        <span>MTD MINUTES</span>
-        <strong>{{ p.mtdMinutes }} min</strong>
-        <small>{{ p.minutesNote }}</small>
-      </article>
-      <article class="summary-card">
-        <span>THIS MONTH</span>
-        <strong>{{ p.monthStatus }}</strong>
-        <small>Care plan monitoring</small>
-      </article>
-    </section>
+    <main class="main-content">
 
-    <div class="report-grid">
-      <section class="report-card">
-        <h2>Patient information</h2>
-        <div class="info-row"><span>Patient name</span><b>{{ p.name }}</b></div>
-        <div class="info-row"><span>Medical record number</span><b>{{ p.mrn }}</b></div>
-        <div class="info-row"><span>Date of birth</span><b>{{ p.dob }}</b></div>
-        <div class="info-row"><span>Phone</span><b>{{ p.phone }}</b></div>
-        <div class="info-row"><span>Email</span><b>{{ p.email }}</b></div>
-        <div class="info-row"><span>Diagnosis</span><b>{{ p.diagnosis }}</b></div>
-        <div class="info-row"><span>Allergies</span><b>{{ p.allergies }}</b></div>
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a routerLink="/patients">Patients</a>
+        <span>/</span>
+        <span>{{ p.name }}</span>
+      </div>
+
+      <!-- Patient Profile -->
+      <section class="patient-profile">
+        <div class="profile-main">
+          <div class="profile-avatar">{{ patientInitials }}</div>
+
+          <div class="profile-info">
+            <div class="name-line">
+              <h1>{{ p.name }}</h1>
+              <span class="active-status">Active</span>
+            </div>
+
+            <p class="mrn">Patient ID: {{ p.mrn }}</p>
+
+            <div class="profile-meta">
+              <span>DOB: {{ p.dob }}</span>
+              <span>{{ p.phone }}</span>
+              <span>{{ p.email }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-buttons">
+          <button class="btn-outline" (click)="printSummary()">
+            Print Summary
+          </button>
+          <button class="btn-primary" (click)="addNote()">
+            + Add Note
+          </button>
+        </div>
       </section>
 
-      <section class="report-card">
-        <h2>Program enrollment</h2>
-        <div class="program"><span>RPM</span><b [class.on]="p.rpm">{{ p.rpm ? 'Enrolled' : 'Not enrolled' }}</b></div>
-        <div class="program"><span>RTMR</span><b [class.on]="p.rtmr">{{ p.rtmr ? 'Enrolled' : 'Not enrolled' }}</b></div>
-        <div class="program"><span>RTMMS</span><b [class.on]="p.rtmms">{{ p.rtmms ? 'Enrolled' : 'Not enrolled' }}</b></div>
-        <div class="program"><span>CCM</span><b [class.on]="p.ccm">{{ p.ccm ? 'Enrolled' : 'Not enrolled' }}</b></div>
+      <!-- Patient Action Tiles -->
+      <section class="action-grid">
+        <button class="action-tile" (click)="selectTab('Overview')">
+          <span class="action-icon blue-icon">⌂</span>
+          <span>Overview</span>
+        </button>
 
-        <h2 class="med-heading">Current medications</h2>
-        <ul>
-          <li *ngFor="let medication of p.medications">{{ medication }}</li>
-        </ul>
-      </section>
-    </div>
-  </main>
+        <button class="action-tile" (click)="selectTab('Clinical')">
+          <span class="action-icon green-icon">✚</span>
+          <span>Clinical</span>
+        </button>
 
-  <ng-template #notFound>
-    <main class="detail-content">
-      <section class="report-card not-found">
-        <h1>Patient not found</h1>
-        <p>The selected patient does not exist in the hardcoded patient data.</p>
-        <button class="primary-btn" (click)="backToPatients()">Return to patients</button>
+        <button class="action-tile" (click)="selectTab('Care Plan')">
+          <span class="action-icon orange-icon">✓</span>
+          <span>Care Plan</span>
+        </button>
+
+        <button class="action-tile" (click)="selectTab('Documents')">
+          <span class="action-icon purple-icon">▤</span>
+          <span>Documents</span>
+        </button>
       </section>
+
+      <!-- Tabs -->
+      <nav class="tab-navigation">
+        <button [class.active]="activeTab === 'Overview'"
+          (click)="selectTab('Overview')">Overview</button>
+
+        <button [class.active]="activeTab === 'Clinical'"
+          (click)="selectTab('Clinical')">Clinical</button>
+
+        <button [class.active]="activeTab === 'Care Plan'"
+          (click)="selectTab('Care Plan')">Care Plan</button>
+
+        <button [class.active]="activeTab === 'Documents'"
+          (click)="selectTab('Documents')">Documents</button>
+      </nav>
+
+      <!-- Overview -->
+      @if (activeTab === 'Overview') {
+        <div class="overview-layout">
+
+          <div class="left-column">
+
+            <!-- Demographics -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Patient Demographics</h2>
+                  <p>Personal and contact information</p>
+                </div>
+                <span class="section-number">01</span>
+              </div>
+
+              <div class="demographics-grid">
+                <div class="info-item">
+                  <label>Full Name</label>
+                  <strong>{{ p.name }}</strong>
+                </div>
+
+                <div class="info-item">
+                  <label>Medical Record Number</label>
+                  <strong>{{ p.mrn }}</strong>
+                </div>
+
+                <div class="info-item">
+                  <label>Date of Birth</label>
+                  <strong>{{ p.dob }}</strong>
+                </div>
+
+                <div class="info-item">
+                  <label>Phone Number</label>
+                  <strong>{{ p.phone }}</strong>
+                </div>
+
+                <div class="info-item">
+                  <label>Email Address</label>
+                  <strong>{{ p.email }}</strong>
+                </div>
+
+                <div class="info-item">
+                  <label>Primary Diagnosis</label>
+                  <strong>{{ p.diagnosis }}</strong>
+                </div>
+              </div>
+            </section>
+
+            <!-- Program Enrollment -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Program Enrollment</h2>
+                  <p>Patient care program enrollment status</p>
+                </div>
+              </div>
+
+              <div class="enrollment-grid">
+                <div class="enrollment-item">
+                  <div class="program-icon blue-icon">RPM</div>
+                  <div class="program-info">
+                    <strong>Remote Patient Monitoring</strong>
+                    <span>RPM</span>
+                  </div>
+                  <span class="program-status" [class.enabled]="p.rpm">
+                    {{ p.rpm ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+
+                <div class="enrollment-item">
+                  <div class="program-icon green-icon">RTM</div>
+                  <div class="program-info">
+                    <strong>Remote Therapeutic Monitoring</strong>
+                    <span>RTMR</span>
+                  </div>
+                  <span class="program-status" [class.enabled]="p.rtmr">
+                    {{ p.rtmr ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+
+                <div class="enrollment-item">
+                  <div class="program-icon orange-icon">MS</div>
+                  <div class="program-info">
+                    <strong>RTM Management Services</strong>
+                    <span>RTMMS</span>
+                  </div>
+                  <span class="program-status" [class.enabled]="p.rtmms">
+                    {{ p.rtmms ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+
+                <div class="enrollment-item">
+                  <div class="program-icon purple-icon">CCM</div>
+                  <div class="program-info">
+                    <strong>Chronic Care Management</strong>
+                    <span>CCM</span>
+                  </div>
+                  <span class="program-status" [class.enabled]="p.ccm">
+                    {{ p.ccm ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Medical History -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Medical History</h2>
+                  <p>Previous clinical activities</p>
+                </div>
+              </div>
+
+              <div class="history-list">
+                @for (item of medicalHistory; track item.title) {
+                  <div class="history-item">
+                    <span class="history-dot"></span>
+                    <div>
+                      <div class="history-title">
+                        <strong>{{ item.title }}</strong>
+                        <span>{{ item.date }}</span>
+                      </div>
+                      <p>{{ item.description }}</p>
+                      <small>{{ item.type }}</small>
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+
+            <!-- Patient Notes -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Patient Notes</h2>
+                  <p>Patient care notes</p>
+                </div>
+                <button class="small-action" (click)="addNote()">+ Add Note</button>
+              </div>
+
+              @for (note of patientNotes; track $index) {
+                <div class="note-item">
+                  {{ note }}
+                </div>
+              } @empty {
+                <p class="empty-message">No notes added yet.</p>
+              }
+            </section>
+
+          </div>
+
+          <aside class="right-column">
+
+            <!-- Care Management -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Care Management</h2>
+                  <p>Patient care coordination</p>
+                </div>
+              </div>
+
+              <div class="care-manager">
+                <div class="care-avatar">CN</div>
+                <div>
+                  <strong>{{ p.navigator }}</strong>
+                  <span>{{ p.navigatorDetail }}</span>
+                </div>
+              </div>
+
+              <div class="status-row">
+                <span>Contact Status</span>
+                <strong>{{ p.contactStatus }}</strong>
+              </div>
+
+              <p class="contact-detail">{{ p.contactDetail }}</p>
+            </section>
+
+            <!-- Billing Progress -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Billing Progress</h2>
+                  <p>Monthly care management minutes</p>
+                </div>
+              </div>
+
+              <div class="billing-value">
+                <strong>{{ p.mtdMinutes }}</strong>
+                <span>Minutes this month</span>
+              </div>
+
+              <div class="billing-note">
+                {{ p.minutesNote }}
+              </div>
+
+              <div class="billing-status"
+                [class.complete]="p.monthStatus === 'Complete'">
+                {{ p.monthStatus }}
+              </div>
+            </section>
+
+            <!-- Medical Conditions -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Medical Conditions</h2>
+                  <p>Current patient diagnosis</p>
+                </div>
+              </div>
+
+              <div class="condition-item">
+                <span class="condition-dot"></span>
+                <div>
+                  <strong>{{ p.diagnosis }}</strong>
+                  <span>Primary diagnosis</span>
+                </div>
+              </div>
+
+              <div class="allergy-box">
+                <strong>Allergies</strong>
+                <p>{{ p.allergies }}</p>
+              </div>
+            </section>
+
+            <!-- Medications -->
+            <section class="panel">
+              <div class="section-heading">
+                <div>
+                  <h2>Current Medications</h2>
+                  <p>Prescribed medications</p>
+                </div>
+              </div>
+
+              @for (medicine of p.medications; track medicine) {
+                <div class="medicine-item">
+                  <span class="medicine-icon">Rx</span>
+                  <strong>{{ medicine }}</strong>
+                </div>
+              } @empty {
+                <p class="empty-message">No medications available.</p>
+              }
+            </section>
+
+          </aside>
+        </div>
+      }
+
+      <!-- Clinical Tab -->
+      @if (activeTab === 'Clinical') {
+        <section class="panel tab-panel">
+          <div class="section-heading">
+            <div>
+              <h2>Clinical Overview</h2>
+              <p>Patient clinical information</p>
+            </div>
+          </div>
+
+          <h3 class="subheading">Vital Signs</h3>
+
+          <div class="vitals-grid">
+            @for (vital of vitalSigns; track vital.label) {
+              <div class="vital-card">
+                <span>{{ vital.icon }}</span>
+                <p>{{ vital.label }}</p>
+                <strong>{{ vital.value }} {{ vital.unit }}</strong>
+                <small>{{ vital.status }}</small>
+              </div>
+            }
+          </div>
+
+          <h3 class="subheading">Diagnosis</h3>
+          <div class="condition-item">
+            <span class="condition-dot"></span>
+            <div>
+              <strong>{{ p.diagnosis }}</strong>
+              <span>Primary diagnosis</span>
+            </div>
+          </div>
+
+          <h3 class="subheading">Allergies</h3>
+          <div class="allergy-box">{{ p.allergies }}</div>
+        </section>
+      }
+
+      <!-- Care Plan Tab -->
+      @if (activeTab === 'Care Plan') {
+        <section class="panel tab-panel">
+          <div class="section-heading">
+            <div>
+              <h2>Patient Care Plan</h2>
+              <p>Care activities and follow-up tasks</p>
+            </div>
+          </div>
+
+          @for (task of careTasks; track task.title) {
+            <div class="task-item">
+              <div>
+                <strong>{{ task.title }}</strong>
+                <p>{{ task.detail }}</p>
+              </div>
+              <span>{{ task.status }}</span>
+            </div>
+          }
+        </section>
+      }
+
+      <!-- Documents Tab -->
+      @if (activeTab === 'Documents') {
+        <section class="panel tab-panel">
+          <div class="section-heading">
+            <div>
+              <h2>Patient Documents</h2>
+              <p>Available patient records</p>
+            </div>
+          </div>
+
+          @for (document of documents; track document.name) {
+            <div class="document-item">
+              <span class="document-icon">PDF</span>
+              <div>
+                <strong>{{ document.name }}</strong>
+                <p>{{ document.date }}</p>
+              </div>
+              <span class="document-type">{{ document.type }}</span>
+            </div>
+          }
+        </section>
+      }
+
     </main>
-  </ng-template> 
-</div>
-<!-- Vital Signs Section -->
-<section class="vitals-section">
-
-  <div class="section-header">
-    <div>
-      <h2>Vital Signs</h2>
-      <p>Patient health measurements overview</p>
-    </div>
-
-    <span class="updated-label">
-      Last updated: Today
-    </span>
   </div>
-
-  <div class="vitals-grid">
-
-    @for (vital of vitalSigns; track vital.name) {
-      <div class="vital-card">
-
-        <div class="vital-top">
-          <span class="vital-icon">
-            {{ vital.icon }}
-          </span>
-
-          <span class="status-normal">
-            {{ vital.status }}
-          </span>
-        </div>
-
-        <h3>{{ vital.name }}</h3>
-
-        <div class="vital-value">
-          {{ vital.value }}
-          <small>{{ vital.unit }}</small>
-        </div>
-
-      </div>
-    }
-
-    @empty {
-      <p>No vital signs available.</p>
-    }
-
+} @else {
+  <div class="not-found">
+    <h2>Patient not found</h2>
+    <p>The requested patient details are not available.</p>
+    <button class="btn-primary" (click)="backToPatients()">
+      Back to Patients
+    </button>
   </div>
-</section>
-
+}

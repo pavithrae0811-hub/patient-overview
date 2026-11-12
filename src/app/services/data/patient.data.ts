@@ -3,6 +3,8 @@ import { Patient } from '../../models/patient.models';
 export const PATIENTS: Patient[] = [
   {
     id: 1,
+    patientStatus: 'Active',
+    targetMinutes: 20,
     name: 'Marcus D. Whitfield',
     dob: 'Mar 14, 1962',
     mrn: 'GM-4471-92',
@@ -29,6 +31,8 @@ export const PATIENTS: Patient[] = [
   },
   {
     id: 2,
+    patientStatus: 'Active',
+    targetMinutes: 20,
     name: 'Szepene Rozalia',
     dob: 'Nov 2, 1949',
     mrn: 'GM-3390-14',
@@ -55,6 +59,8 @@ export const PATIENTS: Patient[] = [
   },
   {
     id: 3,
+    patientStatus: 'Inactive',
+    targetMinutes: 20,
     name: 'Franky Doe',
     dob: 'Jun 27, 1971',
     mrn: 'GM-5182-07',
@@ -81,6 +87,8 @@ export const PATIENTS: Patient[] = [
   },
   {
     id: 4,
+    patientStatus: 'Pending',
+    targetMinutes: 20,
     name: 'Jennifer White',
     dob: 'Feb 9, 1958',
     mrn: 'GM-2846-63',
